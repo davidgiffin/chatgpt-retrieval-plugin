@@ -1,0 +1,28 @@
+version: "3.9"
+
+services:
+  app:
+    build:
+      context: .
+    ports:
+      - "8080:8080"
+    environment:
+      - OPENAI_API_KEY=your_openai_api_key
+      - BEARER_TOKEN=your_bearer_token
+      - DATASTORE=redis
+      - REDIS_HOST=redis
+  redis:
+    image: redis/redis-stack-server:latest
+    ports:
+      - "6379"
+    volumes:
+        - redis_data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "-h", "localhost", "-p", "6379", "ping"]
+      interval: 2s
+      timeout: 1m30s
+      retries: 5
+      start_period: 5s
+
+volumes:
+  redis_data:
